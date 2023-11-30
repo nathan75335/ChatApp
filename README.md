@@ -1,1 +1,1 @@
-# CoursWorkMalachenko
+# CoursWork
