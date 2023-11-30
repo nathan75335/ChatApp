@@ -28,7 +28,11 @@ builder.Services
     .AddScoped<IAuthenticateService, AuthenticateService>()
     .AddAutoMapper(typeof(ApplicationProfile))
     .AddJwtAuthentication(builder.Configuration)
-    .AddTransient<CustomExceptionMiddleware>();
+    .AddTransient<CustomExceptionMiddleware>()
+    .AddCors(options => options.AddPolicy("Any", opts => opts
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod()));
 
 
 var app = builder.Build();
@@ -39,6 +43,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("Any");
+
 app.UseCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();
