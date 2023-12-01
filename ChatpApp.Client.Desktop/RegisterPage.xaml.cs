@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.Shared.Requests.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,18 +76,18 @@ namespace ChatpApp.Client.Desktop
 
         private void textName_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtEmail.Text) && txtEmail.Text.Length > 0)
-                textEmail.Visibility = Visibility.Collapsed;
+            if (!string.IsNullOrEmpty(textName.Text) && textName.Text.Length > 0)
+                textNameBlock.Visibility = Visibility.Collapsed;
             else
-                textEmail.Visibility = Visibility.Visible;
+                textNameBlock.Visibility = Visibility.Visible;
         }
 
         private void txtUsername_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtEmail.Text) && txtEmail.Text.Length > 0)
-                textEmail.Visibility = Visibility.Collapsed;
+            if (!string.IsNullOrEmpty(txtUsername.Text) && txtUsername.Text.Length > 0)
+                textUsernameBlock.Visibility = Visibility.Collapsed;
             else
-                textEmail.Visibility = Visibility.Visible;
+                textUsernameBlock.Visibility = Visibility.Visible;
         }
 
         private void textEmail_MouseDown(object sender, MouseButtonEventArgs e)
@@ -102,6 +103,34 @@ namespace ChatpApp.Client.Desktop
         private void textNameBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             textName.Focus();
+        }
+
+        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            var client = UserManager.GetHttpClient();
+            var content = UserManager.GetContent(new UserRequest
+            {
+                UserName = txtUsername.Text,
+                Name = textName.Text,
+                Email = txtEmail.Text,
+                Password = passwordBox.Password
+            });
+
+            var response = await client.PostAsync("users", content);
+
+            if(response.StatusCode == System.Net.HttpStatusCode.Conflict)
+            {
+                MessageBox.Show("This email or username is alreay taken!");
+                return;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show("Could not add the user");
+                return;
+            }
+
+            UserManager.GetMainWindow().MainFrame.Content = new LoginPage();
         }
     }
 }

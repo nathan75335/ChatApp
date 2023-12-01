@@ -31,8 +31,7 @@ namespace ChatpApp.Client.Desktop
         private HttpClient _httpClient;
         public LoginPage()
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("http://localhost:5107");
+           _httpClient = UserManager.GetHttpClient();
             InitializeComponent();
 
         }
@@ -99,14 +98,11 @@ namespace ChatpApp.Client.Desktop
                 return;
             }
 
-            var dataAsString = JsonSerializer.Serialize(new UserLoginRequest()
+            var content = UserManager.GetContent(new UserLoginRequest()
             {
                 UserNameOrEmail = txtEmail.Text,
                 Password = passwordBox.Password
             });
-            var content = new StringContent(dataAsString);
-            var contentType = new MediaTypeHeaderValue("application/json");
-            content.Headers.ContentType = contentType;
             var response = await _httpClient.PostAsync("auth/login", content);
 
             if (!response.IsSuccessStatusCode)

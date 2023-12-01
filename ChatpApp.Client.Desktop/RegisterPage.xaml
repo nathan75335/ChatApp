@@ -117,7 +117,7 @@
                     </Grid>
                 </Border>
 
-                <Button Content="Register" Click="Button_Click" Style="{StaticResource mainButton}" />
+                <Button Content="Register" Click="RegisterButton_Click" Style="{StaticResource mainButton}" />
             </StackPanel>
         </Border>
 
