@@ -5,11 +5,36 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	 <RootNamespace>ChatApp.Client.Desktop</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ChatApp.Shared\ChatApp.Shared.csproj" />
+	  
   </ItemGroup>
+	<ItemGroup>
+		<None Remove="Images\p1.jpg" />
+		<None Remove="Images\p2.jpg" />
+		<None Remove="Images\p3.jpg" />
+		<None Remove="Images\p4.jpg" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Images\p1.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Images\p2.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Images\p3.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Images\p4.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
+	</ItemGroup>
 
 </Project>

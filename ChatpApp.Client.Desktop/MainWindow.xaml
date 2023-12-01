@@ -12,5 +12,6 @@
         Background="Transparent" >
     <Grid>
         <Frame Height="800" Width="1200" x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+      
     </Grid>
 </Window>

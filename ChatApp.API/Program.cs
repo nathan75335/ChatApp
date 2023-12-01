@@ -47,7 +47,7 @@ app.UseCors("Any");
 
 app.UseCustomExceptionMiddleware();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

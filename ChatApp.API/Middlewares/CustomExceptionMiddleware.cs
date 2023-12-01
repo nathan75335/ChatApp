@@ -1,4 +1,6 @@
 ﻿using ChatApp.BusinessLogic.Exceptions;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.Extensions.Primitives;
 using System.Text;
 
 namespace ChatApp.API.Middlewares;
@@ -7,7 +9,9 @@ public class CustomExceptionMiddleware : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        context.Response.ContentType = "application/json";
+        var token = context.Request.Headers["Authorization"].ToString();
+        //context.Request.Headers["Authorization"] = token.ToString();
+        context.Request.ContentType = "application/json";
 
         try
         {

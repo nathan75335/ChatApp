@@ -55,7 +55,7 @@ public class AuthenticateService : IAuthenticateService
     private string GenerateTokenAsync(User user)
     {
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-        byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
+        byte[] key = Encoding.UTF8.GetBytes(_settings.Key);
 
         SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor()
         {
@@ -65,7 +65,7 @@ public class AuthenticateService : IAuthenticateService
                 new Claim(ClaimTypes.Role, user.Role.Name),
             }),
 
-            Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_settings.LifeTime)),
+            Expires = DateTime.UtcNow.AddHours(_settings.LifeTime),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
             SecurityAlgorithms.HmacSha256Signature),
             Audience = _settings.Audience,

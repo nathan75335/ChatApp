@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.Client.Desktop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,21 @@ namespace ChatpApp.Client.Desktop
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private void ContactButton_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFrame.Content = new ContactPage();
+        }
+
+        private void MessageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

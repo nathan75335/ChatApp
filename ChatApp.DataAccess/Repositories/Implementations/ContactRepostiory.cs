@@ -32,16 +32,16 @@ public class ContactRepostiory : IContactRepository
     public async Task<Contact?> GetByIdAsync(int id)
     {
         return await _contacts
-            .Include(x => x.UserId)
-            .Include(x => x.ContactUserId)
+            .Include(x => x.User)
+            .Include(x => x.ContactUser)
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
     }
 
     public async Task<List<Contact>> GetContactByUserIdAsync(int userId)
     {
         return await _contacts
-            .Include(x => x.UserId)
-            .Include(x => x.ContactUserId)
+            .Include(x => x.User)
+            .Include(x => x.ContactUser)
             .Where(x => x.UserId.Equals(userId))
             .ToListAsync();
     }

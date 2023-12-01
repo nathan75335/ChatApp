@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatApp.API.Controllers;
 
-[ApiController, Route("users"), Authorize]
+[ApiController, Route("users"), Authorize(Roles = "User, Admin")]
 public class ContactsController : ControllerBase
 {
     private readonly IContactService _contactService;

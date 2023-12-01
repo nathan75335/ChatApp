@@ -3,12 +3,50 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ChatpApp.Client.Desktop"
+      xmlns:local="clr-namespace:ChatpApp.Client.Desktop"  
+      xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="MainPage">
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="MainPage"
+      Background="White">
+
 
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <Image Source="C:\Users\User\Documents\4cours\PSP\CoursWorkMalachenko\ChatpApp.Client.Desktop\Images\close.png" Grid.Column="3" Panel.ZIndex="1"  MouseUp="Image_MouseUp" Style="{StaticResource imgClose}"/>
+
+        <Border CornerRadius="10 0 0 10">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#3AA9AD" Offset="0" />
+                    <GradientStop Color="#3AADA1" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid>
+                <Canvas>
+                    <Polygon Points="0,20 230,140 0,270" Fill="#4EB1B6" />
+                    <Polygon Points="100,400 200,370 180,470" Fill="#4EB1B6" />
+                    <Ellipse Margin="250 450 0 0" Width="40" Height="40" Fill="#4EB1B6" />
+                    <Ellipse Margin="50 400 0 0" Width="20" Height="20" Fill="#4EB1B6" />
+                </Canvas>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Column="1">
+                    <Button x:Name="ContactButton" Click="ContactButton_Click" FontSize="14" FontWeight="Bold" FontStyle="Normal" Foreground="White" Height="50" Background="#4EB1B6" BorderBrush="#878787" Padding="15" BorderThickness="1">
+                        Contacts
+                    </Button >
+                    <Button x:Name="MessageButton" Click="MessageButton_Click" Height="50"  FontSize="14" FontWeight="Bold" FontStyle="Normal" Foreground="White" Background="#4EB1B6" BorderBrush="#878787" Padding="15" BorderThickness="1">
+                        Messages
+                    </Button>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+        <Frame x:Name="MenuFrame" Grid.Column="1" NavigationUIVisibility="Hidden" Margin="5,0,-5,0"/>
+
+
     </Grid>
 </Page>
