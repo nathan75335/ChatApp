@@ -19,7 +19,7 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    private async Task<IActionResult> Add(ContactRequest contactRequest)
+    public async Task<IActionResult> Add(ContactRequest contactRequest)
     {
         return Ok(await _contactService.AddAsync(contactRequest));
     }

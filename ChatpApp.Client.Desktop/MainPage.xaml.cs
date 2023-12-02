@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ChatpApp.Client.Desktop
+namespace ChatApp.Client.Desktop
 {
     /// <summary>
     /// Interaction logic for MainPage.xaml
@@ -24,16 +24,17 @@ namespace ChatpApp.Client.Desktop
         public MainPage()
         {
             InitializeComponent();
+            MenuFrame.Content = new ContactPage(MenuFrame);
         }
 
         private void ContactButton_Click(object sender, RoutedEventArgs e)
         {
-            MenuFrame.Content = new ContactPage();
+            MenuFrame.Content = new ContactPage(MenuFrame);
         }
 
         private void MessageButton_Click(object sender, RoutedEventArgs e)
         {
-
+            MenuFrame.Content = new MessagePage();
         }
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)

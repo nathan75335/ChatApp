@@ -23,7 +23,7 @@ public class ContactService : IContactService
 
     public async Task<ContactDto> AddAsync(ContactRequest contact)
     {
-        var user = _userService.GetUserByUserNameOrEmailAsync(contact.Username);
+        var user = await _userService.GetUserByUserNameOrEmailAsync(contact.Username);
 
         var contactCreate = new Contact
         {
@@ -31,9 +31,9 @@ public class ContactService : IContactService
             ContactUserId = user.Id
         };
 
-        var resutl = await _contactRepository.AddAsync(contactCreate);
+        var result = await _contactRepository.AddAsync(contactCreate);
         
-        return _mapper.Map<ContactDto>(resutl);
+        return _mapper.Map<ContactDto>(result);
     }
 
     public async Task DeleteAsync(int id)

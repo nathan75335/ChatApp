@@ -1,7 +1,7 @@
-﻿<Application x:Class="ChatpApp.Client.Desktop.App"
+﻿<Application x:Class="ChatApp.Client.Desktop.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ChatpApp.Client.Desktop"
+             xmlns:local="clr-namespace:ChatApp.Client.Desktop"
              xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              StartupUri="MainWindow.xaml">
     <Application.Resources>

@@ -3,8 +3,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Controls;
 
-namespace ChatpApp.Client.Desktop;
+namespace ChatApp.Client.Desktop;
 
 public class UserManager
 {
@@ -54,4 +55,5 @@ public class UserManager
 
         return content;
     }
+
 }

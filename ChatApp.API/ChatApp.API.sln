@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp.API", "ChatApp.API.csproj", "{29EDC47E-AF90-4709-BE96-9E4841E0EA67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.API", "ChatApp.API.csproj", "{29EDC47E-AF90-4709-BE96-9E4841E0EA67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp.DataAccess", "..\ChatApp.DataAccess\ChatApp.DataAccess.csproj", "{7D04986B-2C60-4DCB-A078-482F06981B28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.DataAccess", "..\ChatApp.DataAccess\ChatApp.DataAccess.csproj", "{7D04986B-2C60-4DCB-A078-482F06981B28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp.BusinessLogic", "..\ChatApp.BusinessLogic\ChatApp.BusinessLogic.csproj", "{731CA694-20D2-491B-A25E-C18FAF9489FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.BusinessLogic", "..\ChatApp.BusinessLogic\ChatApp.BusinessLogic.csproj", "{731CA694-20D2-491B-A25E-C18FAF9489FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp.Shared", "..\ChatApp.Shared\ChatApp.Shared.csproj", "{51BA45F7-6379-4BE5-83D3-B7D4F0015915}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Shared", "..\ChatApp.Shared\ChatApp.Shared.csproj", "{51BA45F7-6379-4BE5-83D3-B7D4F0015915}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatpApp.Client.Desktop", "..\ChatpApp.Client.Desktop\ChatpApp.Client.Desktop.csproj", "{C7BF5DDF-C3D4-45B4-B213-B4CE2891DAE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatApp.Client.Desktop", "..\ChatpApp.Client.Desktop\ChatApp.Client.Desktop.csproj", "{C7BF5DDF-C3D4-45B4-B213-B4CE2891DAE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

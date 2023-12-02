@@ -9,18 +9,23 @@
       Title="ContactPage">
 
     <Grid>
+        <Button Width="120" Content="Add" FontSize="16" Height="50" VerticalAlignment="Top" Style="{StaticResource mainButton}" Click="Button_Click"></Button>
         <ListView x:Name="contactListView" HorizontalAlignment="Center" Height="600" Margin="10,10,0,0" VerticalAlignment="Center" Width="800"
                   ItemsSource="{Binding Contacts}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"/>
-                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="200"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding ContactUser.Name}" Width="150"/>
+                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding ContactUser.Email}" Width="200"/>
                     <GridViewColumn Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Delete" Background="Red" Click="DeleteContact_Click" CommandParameter="{Binding Id}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="Delete" Content="Delete" Background="Red" Style="{StaticResource button}" Click="DeleteContact_Click" CommandParameter="{Binding Id}"/>
+                                    <Button x:Name="Update" Content="Update" Background="Aqua" Style="{StaticResource button}" Click="UpdateContact_Click" CommandParameter="{Binding Id}"/>
+                                </StackPanel>      
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
+                        
                     </GridViewColumn>
                 </GridView>
             </ListView.View>

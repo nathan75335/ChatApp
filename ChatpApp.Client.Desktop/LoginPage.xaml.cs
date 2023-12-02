@@ -21,7 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ChatpApp.Client.Desktop
+namespace ChatApp.Client.Desktop
 {
     /// <summary>
     /// Interaction logic for LoginPage.xaml
