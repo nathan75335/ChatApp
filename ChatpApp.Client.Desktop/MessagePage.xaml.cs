@@ -1,7 +1,12 @@
-﻿using ChatApp.Shared.DTO_s;
+﻿using ChatApp.Client.Desktop.Models;
+using ChatApp.Shared.DTO_s;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,45 +26,110 @@ namespace ChatApp.Client.Desktop
     /// </summary>
     public partial class MessagePage : Page
     {
+        public ObservableCollection<MessageViewModel> Messages { get; set; }
+        
         public MessagePage()
         {
+            Messages = new ObservableCollection<MessageViewModel>();
             InitializeComponent();
-            List<MessageDto> messages = GetMessages(); // Replace this with your message retrieval logic
+            DataContext = this;
+            Loaded += Page_Loaded;
+        }
 
-            foreach (var message in messages)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await StartLongPollingAndUpdateUIAsync(UserManager.Token.User.Id);
+        }
+
+        private async Task<IEnumerable<MessageDto>> LongPollForMessagesAsync(int userId)
+        {
+            string apiUrl = $"http://localhost:5107/users/{userId}/messages/recent-conversation";
+
+            try
             {
-                AddMessageToChat(message);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UserManager.Token.Token);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+                    var response = await client.GetAsync(apiUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        IEnumerable<MessageDto> newMessages = await response.Content.ReadFromJsonAsync<IEnumerable<MessageDto>>();
+                        return newMessages;
+                    }
+
+                    MessageBox.Show("Could not load messages");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            return null;
+        }
+
+        private async Task StartLongPollingAndUpdateUIAsync(int userId)
+        {
+            while (true)
+            {
+                var newMessages = await LongPollForMessagesAsync(userId);
+
+                if (newMessages != null)
+                {
+                    // Update UI with new messages using Dispatcher
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                       List<MessageViewModel> list = new List<MessageViewModel>();
+                        // Assuming you have a collection bound to your UI (e.g., ObservableCollection<MessageDto>)
+                        foreach (MessageDto message in newMessages)
+                        {
+                            // Add each new message to your UI-bound collection
+                            // For example, if you have a collection named MessagesCollection:
+                            var messageViewModel = new MessageViewModel
+                            {
+                                UserId = message.Sender.Id,
+                                Title = message.Sender.Name,
+                                Color = "#000000",
+                                IsRead = message.IsRead,
+                                Message = message.Text,
+                                MessageCount = 1
+                            };
+
+                            list.Add(messageViewModel);
+                            //if (list.FirstOrDefault(x => x.UserId.Equals(messageViewModel.UserId) && x.Message.Equals(messageViewModel.Message)) is null)
+                            //{
+                            //    list.Add(messageViewModel);
+                            //}
+                            //else
+                            //{
+                            //    var model = list.FirstOrDefault(x => x.UserId == message.Sender.Id);
+                            //    model.Message = message.Text;
+                            //    model.MessageCount += 1;
+                            //}
+                        }
+
+                        Messages.Clear();
+                        foreach(var message in list)
+                        {
+                            Messages.Add(message);
+                        }
+                    });
+                }
+
+                // Wait for some time before making the next request (e.g., 2 seconds)
+                await Task.Delay(2000);
             }
         }
 
-        private List<MessageDto> GetMessages()
+        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // Sample messages
-            return new List<MessageDto>
+            if (sender is ListBoxItem listBoxItem && listBoxItem.DataContext is MessageViewModel message)
             {
-                new MessageDto { Id = 1, Sender = new UserDto { Name = "User A" }, Text = "Hello", TimeStamp = DateTime.Now },
-                new MessageDto { Id = 2, Sender = new UserDto { Name = "User B" }, Text = "Hi there!", TimeStamp = DateTime.Now }
-                // Add more messages as needed
-            };
-        }
-
-        // Method to add a message to the chat panel
-        private void AddMessageToChat(MessageDto message)
-        {
-            // Load message template from XAML resources
-            var messageTemplate = Resources["MessageTemplate"] as StackPanel;
-
-            if (messageTemplate != null)
-            {
-                // Create a new instance of the message template and set its DataContext to the message
-                var newMessage = new StackPanel
-                {
-                    Style = messageTemplate.Style,
-                    DataContext = message
-                };
-
-                // Add the new message to the chat panel
-                //chatPanel.Children.Add(newMessage);
+                UserMessage.Content = new UserMessagePage(message.UserId);
             }
         }
     }

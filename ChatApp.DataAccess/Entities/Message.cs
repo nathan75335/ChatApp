@@ -11,5 +11,6 @@ public class Message
     public User? Receiver { get; set; }
     public string Text {  get; set; }
     public DateTime TimeStamp { get; set; }
+    public bool IsRead { get; set; } = false;
     public MessageStatus? MessageStatus { get; set; }
 }

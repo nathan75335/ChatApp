@@ -21,7 +21,9 @@ public class MessageService : IMessageService
 
     public async Task<MessageDto> AddAsync(MessageRequest message)
     {
-        var result = await _messageRepository.AddAsync(_mapper.Map<Message>(message));
+        var messageEntity = _mapper.Map<Message>(message);
+        messageEntity.TimeStamp = DateTime.Now;
+        var result = await _messageRepository.AddAsync(messageEntity);
 
         return _mapper.Map<MessageDto>(result);
     }

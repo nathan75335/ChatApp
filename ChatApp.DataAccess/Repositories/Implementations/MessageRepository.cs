@@ -41,7 +41,7 @@ public class MessageRepository : IMessageRepository
             .Include(x => x.Sender)
             .Include(x => x.Receiver)
             .Where(x => x.SenderId.Equals(senderId) && x.ReceiverId.Equals(receiverId))
-            .OrderBy(x => x.TimeStamp)
+            .OrderByDescending(x => x.TimeStamp)
             .ToListAsync();
     }
 
@@ -51,7 +51,7 @@ public class MessageRepository : IMessageRepository
             .Include(x => x.Sender)
             .Include(x => x.Receiver)
             .Where(x => x.SenderId.Equals(userId) || x.ReceiverId.Equals(userId))
-            .OrderBy(x => x.TimeStamp)
+            .OrderByDescending(x => x.TimeStamp)
             .ToListAsync();
     }
 
