@@ -33,7 +33,7 @@
                 <TextBox Name="textBoxMessage"
  Style="{StaticResource messageTextbox}" HorizontalAlignment="Left" Width="400"/>
             </StackPanel>
-            <Button Style="{StaticResource mainButton}" Width="100">
+            <Button Style="{StaticResource mainButton}" Width="100" x:Name="sendButton" Click="sendButton_Click">
                 Send
             </Button>
         </StackPanel>

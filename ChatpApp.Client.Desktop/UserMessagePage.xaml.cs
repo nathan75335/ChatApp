@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net.Http.Json;
+using ChatApp.Shared.Requests.Message;
 
 namespace ChatApp.Client.Desktop
 {
@@ -109,6 +110,31 @@ namespace ChatApp.Client.Desktop
 
                 await Task.Delay(2000);
             }
+        }
+
+        private async void sendButton_Click(object sender, RoutedEventArgs e)
+        {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5107");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UserManager.Token.Token);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+            var content = UserManager.GetContent(new MessageRequest()
+            {
+                SenderId = UserManager.Token.User.Id,
+                ReceiverId = SenderId,
+                Text = textBoxMessage.Text,
+                MessageStatus = MessageStatus.Sent,
+                IsRead = "false"
+            });
+            var response = await client.PostAsync("users/messages", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show("Could not send the message!!");
+                return;
+            }
+
+            textBoxMessage.Clear();
         }
     }
 }

@@ -4,11 +4,9 @@ using ChatApp.Shared.Requests.Message;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,17 +18,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Net.Http.Json;
+using System.Windows.Media.Animation;
 
 namespace ChatApp.Client.Desktop
 {
     /// <summary>
-    /// Interaction logic for MessagePage.xaml
+    /// Interaction logic for AdminPage.xaml
     /// </summary>
-    public partial class MessagePage : Page
+    public partial class AdminPage : Page
     {
         public ObservableCollection<MessageViewModel> Messages { get; set; }
-        
-        public MessagePage()
+        public AdminPage()
         {
             Messages = new ObservableCollection<MessageViewModel>();
             InitializeComponent();
@@ -40,12 +39,12 @@ namespace ChatApp.Client.Desktop
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            await StartLongPollingAndUpdateUIAsync(UserManager.Token.User.Id);
+            await StartLongPollingAndUpdateUIAsync();
         }
 
-        private async Task<IEnumerable<MessageDto>> LongPollForMessagesAsync(int userId)
+        private async Task<IEnumerable<MessageDto>> LongPollForMessagesAsync()
         {
-            string apiUrl = $"http://localhost:5107/users/{userId}/messages/recent-conversation";
+            string apiUrl = $"http://localhost:5107/users/messages";
 
             try
             {
@@ -74,24 +73,25 @@ namespace ChatApp.Client.Desktop
             return null;
         }
 
-        private async Task StartLongPollingAndUpdateUIAsync(int userId)
+        private async Task StartLongPollingAndUpdateUIAsync()
         {
             while (true)
             {
-                var newMessages = await LongPollForMessagesAsync(userId);
+                var newMessages = await LongPollForMessagesAsync();
 
                 if (newMessages != null)
                 {
                     // Update UI with new messages using Dispatcher
                     await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                       List<MessageViewModel> list = new List<MessageViewModel>();
+                        List<MessageViewModel> list = new List<MessageViewModel>();
                         // Assuming you have a collection bound to your UI (e.g., ObservableCollection<MessageDto>)
                         foreach (MessageDto message in newMessages)
                         {
                             var messageViewModel = new MessageViewModel
                             {
                                 Id = message.Id,
+                                ReceiverId = message.Receiver.Id,
                                 UserId = message.Sender.Id,
                                 Title = message.Sender.Name,
                                 Color = "#000000",
@@ -100,7 +100,7 @@ namespace ChatApp.Client.Desktop
                                 MessageCount = 1
                             };
 
-                           
+
                             if (list.FirstOrDefault(x => x.UserId.Equals(messageViewModel.UserId) && x.Message.Equals(messageViewModel.Message)) is null)
                             {
                                 list.Add(messageViewModel);
@@ -114,7 +114,7 @@ namespace ChatApp.Client.Desktop
                         }
 
                         Messages.Clear();
-                        foreach(var message in list)
+                        foreach (var message in list)
                         {
                             Messages.Add(message);
                         }
@@ -130,21 +130,8 @@ namespace ChatApp.Client.Desktop
         {
             if (sender is ListBoxItem listBoxItem && listBoxItem.DataContext is MessageViewModel message)
             {
-                using var client  = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:5107");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UserManager.Token.Token);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
-                var content = UserManager.GetContent(new MessageRequest
-                {
-                    Text = message.Message,
-                    IsRead = "true"
-                });
-                var response = await client.PutAsync($"users/messages/{message.Id}", content);
-                if (response.IsSuccessStatusCode)
-                {
-                    UserMessage.Content = new UserMessagePage(message.UserId);
-                }
-               
+                UserManager.Token.User.Id = message.ReceiverId;
+                UserMessage.Content = new UserMessagePage(message.UserId);
             }
         }
     }

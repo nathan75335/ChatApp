@@ -40,7 +40,7 @@ public class MessageRepository : IMessageRepository
         return await _messages
             .Include(x => x.Sender)
             .Include(x => x.Receiver)
-            .Where(x => x.SenderId.Equals(senderId) && x.ReceiverId.Equals(receiverId))
+            .Where(x => x.SenderId.Equals(senderId) && x.ReceiverId.Equals(receiverId) || x.SenderId.Equals(receiverId) && x.ReceiverId.Equals(senderId))
             .OrderByDescending(x => x.TimeStamp)
             .ToListAsync();
     }
@@ -50,7 +50,7 @@ public class MessageRepository : IMessageRepository
         return await _messages
             .Include(x => x.Sender)
             .Include(x => x.Receiver)
-            .Where(x => x.SenderId.Equals(userId) || x.ReceiverId.Equals(userId))
+            .Where(x => /*x.SenderId.Equals(userId) ||*/ x.ReceiverId.Equals(userId))
             .OrderByDescending(x => x.TimeStamp)
             .ToListAsync();
     }
@@ -72,4 +72,12 @@ public class MessageRepository : IMessageRepository
 
         return message;
     }
+
+    public async Task<List<Message>> GetAllAsync()
+    {
+        return await  _messages
+            .Include(x => x.Sender)
+            .Include(x => x.Receiver)
+            .ToListAsync();
+    } 
 }

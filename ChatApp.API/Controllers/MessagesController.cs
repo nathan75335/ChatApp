@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatApp.API.Controllers;
 
-[ApiController, Route("users"), Authorize(Roles ="User, Admin")]
+[ApiController, Route("users"), Authorize]
 public class MessagesController : ControllerBase
 {
     private readonly IMessageService _messageService;
@@ -79,6 +79,16 @@ public class MessagesController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         return Ok(await _messageService.GetByIdAsync(id));
+    }
+
+    [Authorize(Roles ="Admin")]
+    [HttpGet("messages")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetAll()
+    {
+        return Ok(await _messageService.GetAllAsync());
     }
 
 }

@@ -11,4 +11,5 @@ public interface IMessageRepository
     Task<List<Message>> GetConversationAsync(int senderId, int receiverId);
     Task<List<Message>> GetRecentConversationAsync(int userId);
     Task<List<Message>> GetUnReadMessageAsync(int userId);
+    Task<List<Message>> GetAllAsync();
 }

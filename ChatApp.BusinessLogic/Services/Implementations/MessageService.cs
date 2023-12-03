@@ -34,6 +34,11 @@ public class MessageService : IMessageService
         await _messageRepository.DeleteAsync(message);
     }
 
+    public async Task<List<MessageDto>> GetAllAsync()
+    {
+        return _mapper.Map<List<MessageDto>>(await _messageRepository.GetAllAsync());
+    }
+
     public async Task<MessageDto?> GetByIdAsync(int id)
     {
         return  _mapper.Map<MessageDto>(await GetOneAsync(id));
@@ -57,7 +62,8 @@ public class MessageService : IMessageService
     public async Task<MessageDto> UpdateAsync(int id, MessageRequest message)
     {
         var messageUpdate = await GetOneAsync(id);
-        _mapper.Map(messageUpdate, message);
+        messageUpdate.Text = message.Text;
+        messageUpdate.IsRead = true;
         var result = await _messageRepository.UpdateAsync(messageUpdate);
 
         return _mapper.Map<MessageDto>(messageUpdate);

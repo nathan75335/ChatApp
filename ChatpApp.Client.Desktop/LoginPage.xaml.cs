@@ -113,6 +113,7 @@ namespace ChatApp.Client.Desktop
             }
 
             UserManager.Token = await response.Content.ReadFromJsonAsync<TokenDto>();
+
             UserManager.GetMainWindow().MainFrame.Content = new MainPage();
         }
 

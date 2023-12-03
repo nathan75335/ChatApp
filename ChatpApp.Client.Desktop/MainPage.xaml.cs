@@ -34,7 +34,15 @@ namespace ChatApp.Client.Desktop
 
         private void MessageButton_Click(object sender, RoutedEventArgs e)
         {
-            MenuFrame.Content = new MessagePage();
+            if(UserManager.Token.User.Role.Name == "Admin")
+            {
+                MenuFrame.Content = new AdminPage();
+            }
+            else
+            {
+                MenuFrame.Content = new MessagePage();
+            }
+            
         }
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
