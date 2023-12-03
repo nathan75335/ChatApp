@@ -1,0 +1,29 @@
+﻿@using ChatApp.Shared.DTO_s
+@model List<ContactDto>
+<div class="container">
+    <h2>Contact List</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contact in Model)
+            {
+                <tr>
+                    <td>@contact.Id</td>
+                    <td>@contact.ContactUser.Name</td>
+                    <td>@contact.ContactUser.Email</td>
+                    <td><a class="btn btn-danger" asp-action="Delete" asp-route-id="@contact.Id">Delete</a></td>
+                    <td><a class="btn btn-primary" asp-action="Update" asp-route-id="@contact.Id">Text</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

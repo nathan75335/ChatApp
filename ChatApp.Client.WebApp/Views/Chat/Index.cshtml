@@ -1,0 +1,114 @@
+﻿<div>
+    <input type="text" id="txtMessage" placeholder="Enter message" />
+    <input type="text" id="txtUserName" placeholder="Enter User Name" />
+    <input type="button" id="btnSend" value="Send" />
+    <ul id="messages"></ul>
+    <ul id="userList"></ul>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bearerToken = '@UserManager.Token.Token'; // Replace with your actual bearer token
+        const externalServerUrl = 'http://localhost:5107'; // Replace with your server URL
+        const userId = @UserManager.Token.User.Id;
+
+        function fetchMessagesFromExternalServer(userId) {
+            fetch(`${externalServerUrl}/users/${userId}/messages/recent-conversation`, {
+                headers: {
+                    'Authorization': `Bearer ${bearerToken}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayMessages(data); // Function to display messages
+                })
+                .catch(error => {
+                    console.error('Error fetching messages:', error);
+                });
+        }
+
+        function displayMessages(messages) {
+            const messagesList = document.getElementById('messages');
+            messagesList.innerHTML = '';
+
+            messages.forEach(message => {
+                const li = document.createElement('li');
+                li.textContent = `Sender: ${message.sender.name}, Receiver: ${message.receiver.name}, Text: ${message.text}`;
+                messagesList.appendChild(li);
+            });
+        }
+
+        // Use the following function to send a new message
+        function sendMessageToExternalServer(message, userName) {
+            fetch(`${externalServerUrl}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bearerToken}`
+                },
+                body: JSON.stringify({
+                    text: message,
+                    receiverId: userId, // Replace userId with the actual user ID
+                    // Other necessary properties as per your API requirements
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error sending message');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Handle success response if needed
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                });
+        }
+
+        // Fetch user list and display initial messages
+        fetch(`${externalServerUrl}/users/${userId}/messages/recent-conversation`, {
+            headers: {
+                'Authorization': `Bearer ${bearerToken}`
+            }
+        })
+            .then(response => response.json())
+            .then(users => {
+                const userList = document.getElementById('userList');
+                userList.innerHTML = '';
+
+                users.forEach(message => {
+                    const li = document.createElement('li');
+                    li.textContent = `User: ${message.sender.name}, ID: ${message.text}`;
+                    userList.appendChild(li);
+                });
+
+                // Assuming the first user in the list is the current user for demo purposes
+                
+                if (userId) {
+                    fetchMessagesFromExternalServer(userId);
+                    // Start polling for messages every 5 seconds
+                    setInterval(function () {
+                        fetchMessagesFromExternalServer(userId);
+                    }, 5000);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user list:', error);
+            });
+
+        // Send message on button click
+        document.getElementById('btnSend').addEventListener('click', function () {
+            const message = document.getElementById('txtMessage').value;
+            const userName = document.getElementById('txtUserName').value;
+
+            sendMessageToExternalServer(message, userName);
+        });
+    });
+
+</script>
