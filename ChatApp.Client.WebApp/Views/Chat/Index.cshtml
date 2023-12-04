@@ -32,6 +32,16 @@
                 });
         }
 
+        function extractReceiverIdFromMessage(messageText) {
+            const receiverIdPattern = /ReceiverID: (\d+)/; // Assuming ReceiverID format: ReceiverID: <receiver_id>
+            const match = messageText.match(receiverIdPattern);
+            if (match && match.length > 1) {
+                return match[1]; // Extracted receiver ID
+            }
+            return null; // If no receiver ID found in the message
+        }
+
+
         function displayMessages(messages) {
             const messagesList = document.getElementById('messages');
             messagesList.innerHTML = '';
@@ -44,8 +54,9 @@
         }
 
         // Use the following function to send a new message
-        function sendMessageToExternalServer(message, userName) {
-            fetch(`${externalServerUrl}/sendMessage`, {
+        function sendMessageToExternalServer(message, username) {
+            //const receiverId = extractReceiverIdFromMessage(message);
+            fetch(`${externalServerUrl}/users/messages`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +64,9 @@
                 },
                 body: JSON.stringify({
                     text: message,
-                    receiverId: userId, // Replace userId with the actual user ID
+                    receiverId: username, 
+                    senderid : @UserManager.Token.User.Id,
+                    IsRead: "false"// Replace userId with the actual user ID
                     // Other necessary properties as per your API requirements
                 })
             })
@@ -71,7 +84,7 @@
                 });
         }
 
-        // Fetch user list and display initial messages
+        //Fetch user list and display initial messages
         fetch(`${externalServerUrl}/users/${userId}/messages/recent-conversation`, {
             headers: {
                 'Authorization': `Bearer ${bearerToken}`
@@ -84,25 +97,27 @@
 
                 users.forEach(message => {
                     const li = document.createElement('li');
-                    li.textContent = `User: ${message.sender.name}, ID: ${message.text}`;
+                    li.textContent = `User: ${message.sender.name}, Message: ${message.text}`;
                     userList.appendChild(li);
                 });
 
-                // Assuming the first user in the list is the current user for demo purposes
-                
-                if (userId) {
+                //Assuming the first user in the list is the current user for demo purposes
+
+                setInterval(function () {
+                    userList.innerHTML = "";
                     fetchMessagesFromExternalServer(userId);
-                    // Start polling for messages every 5 seconds
-                    setInterval(function () {
-                        fetchMessagesFromExternalServer(userId);
-                    }, 5000);
-                }
+                }, 2000);
+                // if (userId) {
+                //     fetchMessagesFromExternalServer(userId);
+                //     //Start polling for messages every 5 seconds
+                   
+                // }
             })
             .catch(error => {
                 console.error('Error fetching user list:', error);
             });
 
-        // Send message on button click
+        //Send message on button click
         document.getElementById('btnSend').addEventListener('click', function () {
             const message = document.getElementById('txtMessage').value;
             const userName = document.getElementById('txtUserName').value;
