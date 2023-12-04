@@ -82,35 +82,28 @@ namespace ChatApp.Client.Desktop
 
                 if (newMessages != null)
                 {
-                    // Update UI with new messages using Dispatcher
+                    var groupedMessages = newMessages.GroupBy(message => message.Sender.Id);
+                    
                     await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
                        List<MessageViewModel> list = new List<MessageViewModel>();
-                        // Assuming you have a collection bound to your UI (e.g., ObservableCollection<MessageDto>)
-                        foreach (MessageDto message in newMessages)
+                        
+                        foreach (var group in groupedMessages)
                         {
+                            var latest = group.OrderByDescending(x => x.TimeStamp).First();
                             var messageViewModel = new MessageViewModel
                             {
-                                Id = message.Id,
-                                UserId = message.Sender.Id,
-                                Title = message.Sender.Name,
-                                Color = "#000000",
-                                IsRead = message.IsRead,
-                                Message = message.Text,
-                                MessageCount = 1
+                                Id = latest.Id,
+                                ReceiverId = latest.Receiver.Id,
+                                UserId = group.Key,
+                                Title = latest.Sender.Name, 
+                                Color = "#000000", // Set color as needed
+                                IsRead = group.All(msg => msg.IsRead),
+                                Message = latest.Text, 
+                                MessageCount = group.Count()
                             };
 
-                           
-                            if (list.FirstOrDefault(x => x.UserId.Equals(messageViewModel.UserId) && x.Message.Equals(messageViewModel.Message)) is null)
-                            {
-                                list.Add(messageViewModel);
-                            }
-                            else
-                            {
-                                var model = list.FirstOrDefault(x => x.UserId == message.Sender.Id);
-                                model.Message = message.Text;
-                                model.MessageCount += 1;
-                            }
+                            list.Add(messageViewModel);
                         }
 
                         Messages.Clear();
@@ -121,7 +114,7 @@ namespace ChatApp.Client.Desktop
                     });
                 }
 
-                // Wait for some time before making the next request (e.g., 2 seconds)
+                // Wait for some time before making the next request
                 await Task.Delay(2000);
             }
         }
