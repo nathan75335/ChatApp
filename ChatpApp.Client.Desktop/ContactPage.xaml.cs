@@ -86,9 +86,9 @@ namespace ChatApp.Client.Desktop
         }
         private void UpdateContact_Click(object sender, RoutedEventArgs e)
         {
-            if (e.OriginalSource is Button button && button.CommandParameter is int contactId)
+            if (e.OriginalSource is Button button && button.CommandParameter is int contactUserId)
             {
-                MenuFrame.Content = new UserMessagePage(contactId);
+                MenuFrame.Content = new UserMessagePage(contactUserId);
             }
         }
         public async Task<List<ContactDto>> GetContactsAsync()
