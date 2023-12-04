@@ -1,6 +1,6 @@
 ﻿<div>
     <input type="text" id="txtMessage" placeholder="Enter message" />
-    <input type="text" id="txtUserName" placeholder="Enter User Name" />
+    <input type="text" id="txtUserName" placeholder="Enter UserID" />
     <input type="button" id="btnSend" value="Send" />
     <ul id="messages"></ul>
     <ul id="userList"></ul>
@@ -48,7 +48,7 @@
 
             messages.forEach(message => {
                 const li = document.createElement('li');
-                li.textContent = `Sender: ${message.sender.name}, Receiver: ${message.receiver.name}, Text: ${message.text}`;
+                li.textContent = `SenderId: ${message.sender.id}, Sender: ${message.sender.name}, Receiver: ${message.receiver.name}, Text: ${message.text}`;
                 messagesList.appendChild(li);
             });
         }

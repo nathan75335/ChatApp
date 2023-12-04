@@ -21,7 +21,7 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Button x:Name="Delete" Content="Delete" Background="Red" Style="{StaticResource button}" Click="DeleteContact_Click" CommandParameter="{Binding Id}"/>
-                                    <Button x:Name="Update" Content="Update" Background="Aqua" Style="{StaticResource button}" Click="UpdateContact_Click" CommandParameter="{Binding Id}"/>
+                                    <Button x:Name="Update" Content="Text" Background="Aqua" Style="{StaticResource button}" Click="UpdateContact_Click" CommandParameter="{Binding Id}"/>
                                 </StackPanel>      
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

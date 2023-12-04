@@ -1,11 +1,13 @@
 ﻿using Azure.Core;
 using ChatApp.Shared.DTO_s;
 using ChatApp.Shared.Requests.Contact;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 
 namespace ChatApp.Client.WebApp.Controllers;
 
+[Authorize]
 public class ContactController : Controller
 {
     public async Task<IActionResult> Index()

@@ -1,7 +1,10 @@
 ﻿using ChatApp.Shared.DTO_s;
 using ChatApp.Shared.Requests.User;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol.Plugins;
+using System.Security.Claims;
 
 namespace ChatApp.Client.WebApp.Controllers
 {
@@ -23,6 +26,14 @@ namespace ChatApp.Client.WebApp.Controllers
             if (response.IsSuccessStatusCode)
             {
                 UserManager.Token = await response.Content.ReadFromJsonAsync<TokenDto>();
+                var claims = new List<Claim>
+                {
+                   new Claim(ClaimTypes.Name, UserManager.Token.User.Name),
+                   new Claim(ClaimTypes.Email, UserManager.Token.User.Email),
+                   new Claim(ClaimTypes.Role, UserManager.Token.User.Role.Name)
+                };
+                var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                 return RedirectToAction("Index", "Home");
             }
@@ -53,6 +64,13 @@ namespace ChatApp.Client.WebApp.Controllers
             ViewData["Error"] = "Something went wrong try again later";
 
             return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return RedirectToAction("Login");
         }
     }
 }

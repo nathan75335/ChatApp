@@ -84,11 +84,13 @@ namespace ChatApp.Client.Desktop
                 LoadContactsAsync();
             }
         }
-        private void UpdateContact_Click( object sender, RoutedEventArgs e)
+        private void UpdateContact_Click(object sender, RoutedEventArgs e)
         {
-
+            if (e.OriginalSource is Button button && button.CommandParameter is int contactId)
+            {
+                MenuFrame.Content = new UserMessagePage(contactId);
+            }
         }
-
         public async Task<List<ContactDto>> GetContactsAsync()
         {
             using var client = new HttpClient();
