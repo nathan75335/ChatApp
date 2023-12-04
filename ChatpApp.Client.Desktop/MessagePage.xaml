@@ -113,17 +113,20 @@
             <ColumnDefinition Width="2.5*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0">
-            <ListBox x:Name="listBoxItem" ItemsSource="{Binding Messages}"
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Grid.Column="0">
+
+                <ListBox x:Name="listBoxItem" ItemsSource="{Binding Messages}"
                 ItemTemplate="{StaticResource ItemTemplate}" >
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <EventSetter Event="MouseDoubleClick"
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <EventSetter Event="MouseDoubleClick"
                                  Handler="ListBoxItem_MouseDoubleClick"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
-        </StackPanel>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </StackPanel>
+        </ScrollViewer>
         <Frame x:Name="UserMessage" NavigationUIVisibility="Hidden" Grid.Column="1" />
     </Grid>
     

@@ -17,9 +17,11 @@
             <RowDefinition Height="9*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel x:Name="userMessagesPanel" Margin="20 10 20 20">
-            
-        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="userMessagesPanel" Margin="20 10 20 20">
+                
+            </StackPanel>
+        </ScrollViewer>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Width="500" HorizontalAlignment="Left">
             <StackPanel Orientation="Vertical">
                 <TextBlock Margin="15 0 120 0"
