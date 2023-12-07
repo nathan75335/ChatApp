@@ -5,10 +5,10 @@
     <div class="row">
         <div class="col-md-6 offset-md-3 register-form">
             <h2 class="text-center mb-4">User Registration</h2>
-            <form asp-action="Register" method="post">
+            <form method="post">
                 <span> @ViewData["Error"]</span>
                 <div class="form-group">
-                    <label asp-for="Username">Name</label>
+                    <label asp-for="Username">UserName</label>
                     <input asp-for="Username" class="form-control" />
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>

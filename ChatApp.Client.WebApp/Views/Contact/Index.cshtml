@@ -20,7 +20,7 @@
                     <td>@contact.ContactUser.Name</td>
                     <td>@contact.ContactUser.Email</td>
                     <td><a class="btn btn-danger" asp-action="Delete" asp-route-id="@contact.Id">Delete</a></td>
-                    <td><a class="btn btn-primary" asp-action="Update" asp-route-id="@contact.Id">Text</a></td>
+                    <td><a class="btn btn-primary" asp-controller="Chat"  asp-action="Index" >Text</a></td>
                 </tr>
             }
         </tbody>

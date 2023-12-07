@@ -26,10 +26,12 @@ public class ContactController : Controller
         return View();
     }
 
+    [HttpPost]
     public async Task<IActionResult> Create(ContactRequest request)
     {
         request.UserId = UserManager.Token.User.Id;
         using var client = new HttpClient();
+        client.BaseAddress = new Uri("http://localhost:5107");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UserManager.Token.Token);
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
         var content = UserManager.GetContent(request);
