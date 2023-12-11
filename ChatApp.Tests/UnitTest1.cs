@@ -83,7 +83,7 @@ public class Tests
     }
 
     [Test]
-    public async Task UpdateAsync_NonexistentId_ThrowsNotFoundException()
+    public void UpdateAsync_NonexistentId_ThrowsNotFoundException()
     {
         // Arrange
         var messageId = 999;
@@ -98,4 +98,60 @@ public class Tests
         });
     }
 
+    [Test]
+    public void AddAsync_NullMessageRequest_ThrowsArgumentNullException()
+    {
+        // Arrange
+        MessageRequest nullMessageRequest = null;
+
+        // Act & Assert
+        Assert.ThrowsAsync<NullReferenceException>(async () =>
+        {
+            await _messageService.AddAsync(nullMessageRequest);
+        });
+    }
+
+    [Test]
+    public async Task GetByIdAsync_NonexistentId_ReturnsNull()
+    {
+        // Arrange
+        var messageId = 999;
+
+        _mockMessageRepository.Setup(repo => repo.GetByIdAsync(messageId)).ReturnsAsync((Message)null);
+
+        // Act
+        Assert.ThrowsAsync<NotFoundException>(async () =>
+        {
+            await _messageService.GetByIdAsync(messageId);
+        });
+    }
+
+    [Test]
+    public async Task GetConversationAsync_EmptyConversation_ReturnsEmptyList()
+    {
+        // Arrange
+        var senderId = 1;
+        var receiverId = 2;
+        var emptyList = new List<Message>();
+
+        _mockMessageRepository.Setup(repo => repo.GetConversationAsync(senderId, receiverId)).ReturnsAsync(emptyList);
+
+        // Act
+        Assert.IsNull(await _messageService.GetConversationAsync(senderId, receiverId));
+
+    }
+
+    [Test]
+    public async Task GetRecentConversationAsync_NoMessages_ReturnsEmptyList()
+    {
+        // Arrange
+        var userId = 1;
+        var emptyList = new List<Message>();
+
+        _mockMessageRepository.Setup(repo => repo.GetRecentConversationAsync(userId)).ReturnsAsync(emptyList);
+
+        // Act
+        Assert.IsNull( await _messageService.GetRecentConversationAsync(userId));
+
+    }
 }
