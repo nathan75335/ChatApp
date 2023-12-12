@@ -50,7 +50,7 @@ public class MessageRepository : IMessageRepository
         return await _messages
             .Include(x => x.Sender)
             .Include(x => x.Receiver)
-            .Where(x => /*x.SenderId.Equals(userId) ||*/ x.ReceiverId.Equals(userId))
+            .Where(x => x.SenderId.Equals(userId) || x.ReceiverId.Equals(userId))
             .OrderByDescending(x => x.TimeStamp)
             .ToListAsync();
     }
@@ -61,7 +61,7 @@ public class MessageRepository : IMessageRepository
             .Include(x => x.Sender)
             .Include(x => x.Receiver)
             .Where(x => x.ReceiverId.Equals(userId) && x.MessageStatus.Equals(MessageStatus.UnRead))
-            .OrderBy(x => x.TimeStamp)
+            .OrderByDescending(x => x.TimeStamp)
             .ToListAsync();
     }
 

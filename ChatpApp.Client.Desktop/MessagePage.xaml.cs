@@ -45,7 +45,7 @@ namespace ChatApp.Client.Desktop
 
         private async Task<IEnumerable<MessageDto>> LongPollForMessagesAsync(int userId)
         {
-            string apiUrl = $"http://localhost:5107/users/{userId}/messages/recent-conversation";
+            string apiUrl = $"http://localhost:5107/users/{userId}/messages/new";
 
             try
             {

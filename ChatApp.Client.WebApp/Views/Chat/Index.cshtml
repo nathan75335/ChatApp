@@ -85,7 +85,7 @@
         }
 
         //Fetch user list and display initial messages
-        fetch(`${externalServerUrl}/users/${userId}/messages/recent-conversation`, {
+        fetch(`${externalServerUrl}/users/${userId}/messages/new`, {
             headers: {
                 'Authorization': `Bearer ${bearerToken}`
             }
@@ -107,11 +107,11 @@
                     userList.innerHTML = "";
                     fetchMessagesFromExternalServer(userId);
                 }, 2000);
-                // if (userId) {
-                //     fetchMessagesFromExternalServer(userId);
-                //     //Start polling for messages every 5 seconds
+                if (userId) {
+                    fetchMessagesFromExternalServer(userId);
+                    //Start polling for messages every 5 seconds
                    
-                // }
+                }
             })
             .catch(error => {
                 console.error('Error fetching user list:', error);
