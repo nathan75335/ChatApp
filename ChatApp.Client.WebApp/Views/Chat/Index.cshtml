@@ -185,6 +185,44 @@
         //     return null; // If no receiver ID found in the message
         // }
 
+        function convertToMessageViewModel(messages) {
+            const groupedMessages = messages.reduce((acc, message) => {
+                const key = message.sender.id;
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(message);
+                return acc;
+            }, {});
+
+            const list = [];
+
+            for (const key in groupedMessages) {
+                if (Object.prototype.hasOwnProperty.call(groupedMessages, key)) {
+                    const group = groupedMessages[key];
+
+                    const latest = group.reduce((prev, current) => (
+                        new Date(current.timestamp) > new Date(prev.timestamp) ? current : prev
+                    ));
+
+                    const messageViewModel = {
+                        id: latest.id,
+                        senderId: latest.sender.Id,
+                        userId: key,
+                        title: latest.sender.name,
+                        color: "#000000", // Set color as needed
+                        isRead: group.every(msg => msg.isRead),
+                        message: latest.text,
+                        messageCount: group.length
+                    };
+
+                    list.push(messageViewModel);
+                }
+            }
+
+            return list;
+        }
+
 
         function displayMessages(messages) {
             const messagesList = document.getElementById('txtMessage');
@@ -321,6 +359,9 @@
                             return response.json();
                         })
                         .then(data => {
+                            if(senderId !== globalSenderId){
+                                return
+                            } 
                             const userMessagesPanel = document.getElementById('userMessagesPanel');
                             userMessagesPanel.innerHTML = ''
                             displayMessages(data); // Function to display messages
@@ -329,6 +370,7 @@
                             console.error('Error fetching messages:', error);
                         });
                 }
+
                 globalSenderId = clickedSenderId;
                 setInterval(function () {
                     longReceivingMessageFromTheServer(clickedSenderId);
@@ -359,8 +401,9 @@
                     // const userList = document.getElementById('userList');
                     //userList.innerHTML = '';
                     userPanel.innerHTML = ""
-                    messages.forEach(message => {
-                        appendMessageNew('', message.sender.id,message.sender.name, message.text , 1);
+                    const messagesViewModel = convertToMessageViewModel(messages)
+                    messagesViewModel.forEach(message => {
+                        appendMessageNew('', message.userId, message.title, message.message, message.messageCount);
                
                         // const li = document.createElement('li');
                         // li.textContent = `User: ${message.sender.name}, Message: ${message.text}`;
