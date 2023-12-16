@@ -1,16 +1,158 @@
-﻿<div>
+﻿<div style="display:flex; flex-direction:column;">
+     <style>
+    /* CSS for the User Message Page */
+    .user-message-page {
+      font-family: Arial, sans-serif;
+      width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .user-messages-panel {
+      overflow-y: auto;
+      max-height: calc(100vh - 100px);
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      display: flex;
+      flex-direction:column-reverse;
+      height: 550px;
+      border-radius:10px;
+    }
+
+    .message-container {
+      margin-bottom: 10px; /* Adjust as needed for the desired spacing */
+    }
+
+    .text-block {
+      border-radius: 10px 0 10px 10px;
+      background-color: #F8F7FC;
+      padding: 7px 10px;
+      font-size: 14px;
+      color: #94939A;
+      margin-left: 5px;
+    }
+
+    .message-input {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .message-textbox {
+      flex: 1;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+
+    .main-button {
+      padding: 8px 15px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .main-button:hover {
+      background-color: #2980b9;
+    }
+
+
+
+        .message {
+            background-color: #DCF8C6;
+            border-radius: 10px;
+            display: flex;
+            max-width: 70%;
+        }
+
+        .message-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin-right: 10px;
+        }
+
+        .sender-name {
+            font-weight: bold;
+        }
+
+        .message-text {
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .message-count {
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            margin-left: auto;
+        }
+        .user-panel{
+            height:100px;
+            position:absolute;
+            left:40px;
+            top:90px;
+            border:1px solid black ;
+            border-radius: 10px;
+            height:550px;
+            width:450px;
+            display: flex;
+            flex-direction: column-reverse; /* To reverse message order */
+            gap: 10px;
+            overflow-y: auto;
+        }
+  </style>
+    <div class="user-panel" id="userNewMessages">
+       
+        <!-- User Panel Content -->
+        <!-- This part represents your existing XAML user panel content -->
+        <!-- Place your HTML content and structure here -->
+        <!-- Modify as needed -->
+    </div>
+    <div class="user-message-page">
+        
+        <div class="user-messages-panel" id="userMessagesPanel">
+            <!-- Messages will be populated here -->
+        </div>
+        <div class="message-input">
+            <input type="text" placeholder="Type your message ..." id="txtUserName" class="message-textbox" />
+            <input class="main-button" id="btnSend" value="Send" type="button">
+                
+        </div>
+    </div>
     <input type="text" id="txtMessage" placeholder="Enter message" />
     <input type="text" id="txtUserName" placeholder="Enter UserID" />
-    <input type="button" id="btnSend" value="Send" />
+    @* <input type="button" id="btnSend" value="Send" /> *@
     <ul id="messages"></ul>
-    <ul id="userList"></ul>
+    <ul id="userList"></ul> 
 </div>
 
-<script>
+<script >
     document.addEventListener('DOMContentLoaded', function () {
         const bearerToken = '@UserManager.Token.Token'; // Replace with your actual bearer token
         const externalServerUrl = 'http://localhost:5107'; // Replace with your server URL
         const userId = @UserManager.Token.User.Id;
+        const userPanel = document.getElementById('userNewMessages');
+        const senderId = 0;
 
         function fetchMessagesFromExternalServer(userId) {
             fetch(`${externalServerUrl}/users/${userId}/messages/recent-conversation`, {
@@ -25,6 +167,8 @@
                     return response.json();
                 })
                 .then(data => {
+                    const userMessagesPanel = document.getElementById('userMessagesPanel');
+                    userMessagesPanel.innerHTML = ''
                     displayMessages(data); // Function to display messages
                 })
                 .catch(error => {
@@ -32,30 +176,66 @@
                 });
         }
 
-        function extractReceiverIdFromMessage(messageText) {
-            const receiverIdPattern = /ReceiverID: (\d+)/; // Assuming ReceiverID format: ReceiverID: <receiver_id>
-            const match = messageText.match(receiverIdPattern);
-            if (match && match.length > 1) {
-                return match[1]; // Extracted receiver ID
-            }
-            return null; // If no receiver ID found in the message
-        }
+        // function extractReceiverIdFromMessage(messageText) {
+        //     const receiverIdPattern = /ReceiverID: (\d+)/; // Assuming ReceiverID format: ReceiverID: <receiver_id>
+        //     const match = messageText.match(receiverIdPattern);
+        //     if (match && match.length > 1) {
+        //         return match[1]; // Extracted receiver ID
+        //     }
+        //     return null; // If no receiver ID found in the message
+        // }
 
 
         function displayMessages(messages) {
-            const messagesList = document.getElementById('messages');
+            const messagesList = document.getElementById('txtMessage');
             messagesList.innerHTML = '';
 
-            messages.forEach(message => {
+            messages.forEach((message, index, allMessages) => {
+
+                // @UserManager.SenderId = message.sender.id;
+
+                if (message.sender.id === @UserManager.Token.User.Id) {
+                    appendMessage(`${message.receiver.name}: ${message.text}`, "start");
+                } else {
+                    appendMessage(`${message.sender.name}: ${message.text}`, "end")
+                }
+               
                 const li = document.createElement('li');
                 li.textContent = `SenderId: ${message.sender.id}, Sender: ${message.sender.name}, Receiver: ${message.receiver.name}, Text: ${message.text}`;
                 messagesList.appendChild(li);
             });
         }
 
+
+        //message with the users
+        function appendMessage(text, position) {
+            const userMessagesPanel = document.getElementById('userMessagesPanel');
+            
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message-container');
+
+            const textBlock = document.createElement('div');
+            textBlock.classList.add('text-block');
+            textBlock.textContent = text;
+
+            messageContainer.appendChild(textBlock);
+            userMessagesPanel.appendChild(messageContainer);
+
+            // Apply position based on the parameter
+            if (position === 'start') {
+                messageContainer.style.marginRight = 'auto';
+            } else if (position === 'end') {
+                messageContainer.style.marginLeft = 'auto';
+            }
+        }
+
+
         // Use the following function to send a new message
         function sendMessageToExternalServer(message, username) {
             //const receiverId = extractReceiverIdFromMessage(message);
+            if (senderId === 0) {
+                return;
+            }
             fetch(`${externalServerUrl}/users/messages`, {
                 method: 'POST',
                 headers: {
@@ -84,46 +264,95 @@
                 });
         }
 
-        //Fetch user list and display initial messages
-        fetch(`${externalServerUrl}/users/${userId}/messages/new`, {
-            headers: {
-                'Authorization': `Bearer ${bearerToken}`
-            }
-        })
-            .then(response => response.json())
-            .then(users => {
-                const userList = document.getElementById('userList');
-                userList.innerHTML = '';
 
-                users.forEach(message => {
-                    const li = document.createElement('li');
-                    li.textContent = `User: ${message.sender.name}, Message: ${message.text}`;
-                    userList.appendChild(li);
-                });
 
-                //Assuming the first user in the list is the current user for demo purposes
+        //add new messages
+        function appendMessageNew(profileImg, senderName, text, count) {
+           
+            const message = document.createElement('div');
+            message.classList.add('message');
 
-                setInterval(function () {
-                    userList.innerHTML = "";
-                    fetchMessagesFromExternalServer(userId);
-                }, 2000);
-                if (userId) {
-                    fetchMessagesFromExternalServer(userId);
-                    //Start polling for messages every 5 seconds
-                   
+            const profile = document.createElement('div');
+            profile.classList.add('profile');
+            profile.style.backgroundImage = `url(${profileImg})`;
+
+            const messageDetails = document.createElement('div');
+            messageDetails.classList.add('message-details');
+
+            const name = document.createElement('div');
+            name.classList.add('sender-name');
+            name.textContent = senderName;
+
+            const messageText = document.createElement('div');
+            messageText.classList.add('message-text');
+            messageText.textContent = text;
+
+            const messageCount = document.createElement('div');
+            messageCount.classList.add('message-count');
+            messageCount.textContent = count;
+
+            messageDetails.appendChild(name);
+            messageDetails.appendChild(messageText);
+            message.appendChild(profile);
+            message.appendChild(messageDetails);
+            message.appendChild(messageCount);
+
+            userPanel.appendChild(message);
+        }
+
+
+
+
+        function fetchNewMessages(userId) {
+            //Fetch user list and display initial messages
+            fetch(`${externalServerUrl}/users/${userId}/messages/new`, {
+                headers: {
+                    'Authorization': `Bearer ${bearerToken}`
                 }
             })
-            .catch(error => {
-                console.error('Error fetching user list:', error);
-            });
+                .then(response => response.json())
+                .then(messages => {
+                    // const userList = document.getElementById('userList');
+                    //userList.innerHTML = '';
+                    userPanel.innerHTML = ""
+                    messages.forEach(message => {
+                        appendMessageNew('profile.jpg', message.sender.name, message.text , 1);
+               
+                        // const li = document.createElement('li');
+                        // li.textContent = `User: ${message.sender.name}, Message: ${message.text}`;
+                        // userList.appendChild(li);
+                    });
+
+                    //Assuming the first user in the list is the current user for demo purposes
+
+                   
+                    // if (userId) {
+                    //     fetchMessagesFromExternalServer(userId);
+                    //     //Start polling for messages every 5 seconds
+
+                    // }
+                })
+                .catch(error => {
+                    console.error('Error fetching user list:', error);
+                });
+        }
+
+        setInterval(function () {
+            fetchNewMessages(userId)
+            fetchMessagesFromExternalServer(userId);
+        }, 2000);
 
         //Send message on button click
         document.getElementById('btnSend').addEventListener('click', function () {
             const message = document.getElementById('txtMessage').value;
             const userName = document.getElementById('txtUserName').value;
 
-            sendMessageToExternalServer(message, userName);
+            sendMessageToExternalServer(message,  senderId);
         });
     });
+
+
+    //append message 
+   
 
 </script>

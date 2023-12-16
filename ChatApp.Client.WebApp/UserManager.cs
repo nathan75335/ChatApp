@@ -8,6 +8,7 @@ namespace ChatApp.Client.WebApp;
 public class UserManager
 {
     public static TokenDto Token { get; set; }   
+    public static int SenderId { get; set; }
     public static StringContent GetContent<T>(T request)
     {
         var dataString = JsonSerializer.Serialize<T>(request);

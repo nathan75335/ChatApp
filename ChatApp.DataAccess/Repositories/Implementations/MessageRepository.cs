@@ -60,7 +60,7 @@ public class MessageRepository : IMessageRepository
         return await _messages
             .Include(x => x.Sender)
             .Include(x => x.Receiver)
-            .Where(x => x.ReceiverId.Equals(userId) && x.MessageStatus.Equals(MessageStatus.UnRead))
+            .Where(x => x.ReceiverId.Equals(userId) || x.SenderId.Equals(userId))
             .OrderByDescending(x => x.TimeStamp)
             .ToListAsync();
     }

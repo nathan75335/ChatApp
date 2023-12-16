@@ -123,7 +123,7 @@ namespace ChatApp.Client.Desktop
                 SenderId = UserManager.Token.User.Id,
                 ReceiverId = SenderId,
                 Text = textBoxMessage.Text,
-                MessageStatus = MessageStatus.Sent,
+                MessageStatus = MessageStatus.UnRead,
                 IsRead = "false"
             });
             var response = await client.PostAsync("users/messages", content);
